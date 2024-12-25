@@ -16,6 +16,17 @@ app = Celery('worker') # celery initialize에 필요
 # celery 전용 constant 만들때 사용
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
+app.conf.update(
+    task_routes = {
+        'worker.tasks.dumb': {
+            'queue': 'queue1'
+        },
+        'worker.tasks.add': {
+            'queue': 'queue2'
+        }
+    }
+)
+
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
