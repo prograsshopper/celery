@@ -27,6 +27,16 @@ app.conf.update(
     }
 )
 
+# Redis Specific
+app.conf.broker_transport_options = {
+    'priority_steps': list(range(10)),
+    'sep': ':',
+    'queue_order_strategy': 'priority'
+}
+"""
+['celery', 'celery:1', 'celery:2', 'celery:3', 'celery:4', 'celery:5', 'celery:6', 'celery:7', 'celery:8', 'celery:9']
+"""
+
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
