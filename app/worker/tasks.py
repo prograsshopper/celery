@@ -3,7 +3,7 @@ import time
 from celery import shared_task
 
 
-@shared_task
+@shared_task(queue='celery')
 def add(x, y):
     return x + y
 
@@ -11,6 +11,10 @@ def add(x, y):
 @shared_task
 def dumb():
     return
+
+@shared_task(queue='celery')
+def xsum(numbers):
+    return sum(numbers)
 
 
 @shared_task(queue='celery')
