@@ -27,6 +27,9 @@ app.conf.update(
     }
 )
 
+# Default Setting For Rate Limiting
+app.conf.task_default_rate_limit ='5/m' # 5 tasks per minute
+
 # Redis Specific
 app.conf.broker_transport_options = {
     'priority_steps': list(range(10)),

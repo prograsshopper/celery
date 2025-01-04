@@ -3,7 +3,7 @@ import time
 from celery import shared_task
 
 
-@shared_task(queue='celery')
+@shared_task(queue='celery', rate_limit='1/m')  # limit rate
 def add(x, y):
     return x + y
 
@@ -33,3 +33,12 @@ def p2():
 def p3():
     time.sleep(5)
     return
+
+
+@shared_task(queue='celery')
+def print_result(x, y, msg=None):
+    total = x + y
+    if msg:
+        return f"{msg}: {total}"
+    return total
+#  print_result.apply_async(args=[1, 2], kwargs={"msg": "The result is"})
