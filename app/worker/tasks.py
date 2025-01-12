@@ -42,3 +42,21 @@ def print_result(x, y, msg=None):
         return f"{msg}: {total}"
     return total
 #  print_result.apply_async(args=[1, 2], kwargs={"msg": "The result is"})
+
+
+@shared_task(queue='celery')
+def sleep_task():
+    time.sleep(10)
+    return
+
+
+def sync_task():
+    result = sleep_task.apply_async()
+    print("Waiting...")
+    print(result.get()) # execution 기다려봄
+
+
+def async_task():
+    result = sleep_task.apply_async()
+    print("Not Waiting...")
+    print(result.task_id()) # 기다릴 필요 X
