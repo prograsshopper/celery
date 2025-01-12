@@ -1,6 +1,7 @@
 import time
 
 from celery import shared_task
+from celery.signals import task_prerun, task_postrun
 
 
 @shared_task(queue='celery', rate_limit='1/m')  # limit rate
@@ -60,3 +61,26 @@ def async_task():
     result = sleep_task.apply_async()
     print("Not Waiting...")
     print(result.task_id()) # 기다릴 필요 X
+
+# signal
+# Define signal handlers
+
+
+@task_prerun.connect
+def task_prerun_handler(sender, task_id, task, args, kwargs, **kwargs_extra):
+    print(f"Task {task_id} is about to run: {task.name} with args {args}")
+
+
+@task_postrun.connect
+def task_postrun_handler(sender, task_id, task, args, kwargs, retval, state, **kwargs_extra):
+    print(f"Task {task_id} has completed : {task.name} with result {retval}")
+
+
+# simulate signal
+def simulating_task_signal():
+    # Call the celery task asynchronously
+    result = add.delay(2, 3)
+
+    # Get the result of the task
+    final_result = result.get()
+    print("Final Result: ", final_result)
